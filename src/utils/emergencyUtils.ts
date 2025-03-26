@@ -114,12 +114,17 @@ export const vibrate = (pattern?: number | number[]): void => {
 
 // Process sound level data
 export const processSoundLevel = (dataArray: Uint8Array): number => {
+  // Get sum of all frequency data
   const sum = dataArray.reduce((acc, value) => acc + value, 0);
+  
+  // Calculate average level and apply a multiplier to normalize it
   return Math.min((sum / dataArray.length) * 1.2, 100);
 };
 
 // Check if sound level indicates an emergency
-export const isSoundEmergency = (soundLevel: number, threshold = 80): boolean => {
+export const isSoundEmergency = (soundLevel: number, threshold = 70): boolean => {
+  // Lower the threshold to 70 (from 80) to make it more sensitive
+  // This will detect louder sounds like screams more easily
   return soundLevel > threshold;
 };
 

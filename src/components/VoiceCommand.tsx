@@ -20,7 +20,11 @@ export const VoiceCommand: React.FC<VoiceCommandProps> = ({
   // Set up speech recognition
   useEffect(() => {
     if (!isEmergencyActive) {
-      const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+      // Fix for SpeechRecognition browser compatibility
+      const SpeechRecognition = window.SpeechRecognition || 
+                               (window as any).webkitSpeechRecognition || 
+                               (window as any).mozSpeechRecognition || 
+                               (window as any).msSpeechRecognition;
       
       if (!SpeechRecognition) {
         setError('Speech recognition not supported in this browser.');
@@ -47,7 +51,11 @@ export const VoiceCommand: React.FC<VoiceCommandProps> = ({
           'i need help', 
           'danger', 
           'sos',
-          'alert'
+          'alert',
+          'help',
+          'please help',
+          'scream',
+          'screaming'
         ];
         
         if (emergencyPhrases.some(phrase => latestTranscript.includes(phrase))) {
@@ -168,7 +176,7 @@ export const VoiceCommand: React.FC<VoiceCommandProps> = ({
           <div className="bg-muted/50 p-3 rounded-lg">
             <p className="text-sm font-medium mb-1">Say any of these phrases to activate emergency:</p>
             <div className="flex flex-wrap gap-2 mt-2">
-              {['emergency', 'help me', 'danger', 'sos', 'alert', 'i need help'].map((phrase) => (
+              {['emergency', 'help me', 'danger', 'sos', 'alert', 'help', 'scream', 'i need help'].map((phrase) => (
                 <span 
                   key={phrase} 
                   className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full"

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Layout } from '../components/Layout';
 import { StatusIndicator } from '../components/StatusIndicator';
@@ -9,7 +8,16 @@ import { CameraCapture } from '../components/CameraCapture';
 import { VoiceCommand } from '../components/VoiceCommand';
 import { EmergencyContacts } from '../components/EmergencyContacts';
 import { EmergencyTimeline } from '../components/EmergencyTimeline';
-import { dummyContacts, getCurrentLocation, vibrate, processSoundLevel, isSoundEmergency, createEmergencyEvent, EmergencyEvent } from '../utils/emergencyUtils';
+import { 
+  dummyContacts, 
+  getCurrentLocation, 
+  vibrate, 
+  processSoundLevel, 
+  isSoundEmergency, 
+  createEmergencyEvent, 
+  EmergencyEvent 
+} from '../utils/emergencyUtils';
+import { toast } from "@/components/ui/use-toast";
 
 const Index = () => {
   // State management
@@ -28,6 +36,7 @@ const Index = () => {
   const microphoneRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const soundCheckRef = useRef<number | null>(null);
   const dataArrayRef = useRef<Uint8Array | null>(null);
+  const lastEmergencyCheckRef = useRef<number>(0);
   
   // Initialize audio and location monitoring
   useEffect(() => {
@@ -63,7 +72,15 @@ const Index = () => {
         const level = processSoundLevel(dataArrayRef.current);
         setSoundLevel(level);
         
-        if (isSoundEmergency(level) && !isEmergencyActive) {
+        const now = Date.now();
+        // To prevent multiple triggers in rapid succession, add a cooldown
+        if (isSoundEmergency(level) && !isEmergencyActive && now - lastEmergencyCheckRef.current > 2000) {
+          lastEmergencyCheckRef.current = now;
+          toast({
+            title: "High volume detected",
+            description: "Activating emergency mode due to loud sound",
+            variant: "destructive",
+          });
           activateEmergency('sound');
         }
         
