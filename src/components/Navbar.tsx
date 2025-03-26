@@ -1,9 +1,12 @@
 
 import React from 'react';
 import { Shield, Info, Settings, Menu } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export const Navbar: React.FC = () => {
+  const location = useLocation();
+  const isDemo = location.pathname === '/demo';
+
   return (
     <header className="sticky top-0 z-50 w-full">
       <div className="glass backdrop-blur-xl bg-white/70 dark:bg-gray-900/70 border-b border-gray-100 dark:border-gray-800">
@@ -21,6 +24,7 @@ export const Navbar: React.FC = () => {
             <Link to="/features" className="text-foreground/80 hover:text-foreground transition-colors font-medium">Features</Link>
             <Link to="/about" className="text-foreground/80 hover:text-foreground transition-colors font-medium">About</Link>
             <Link to="/contact" className="text-foreground/80 hover:text-foreground transition-colors font-medium">Contact</Link>
+            <Link to="/demo" className="text-foreground/80 hover:text-foreground transition-colors font-medium">Demo</Link>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -39,6 +43,11 @@ export const Navbar: React.FC = () => {
           </div>
         </div>
       </div>
+      {isDemo && (
+        <div className="bg-amber-500/10 text-amber-800 dark:text-amber-300 text-center py-1 text-sm font-medium">
+          Demo Mode - Try out SafeGuard features in this simulated environment
+        </div>
+      )}
     </header>
   );
 };

@@ -2,6 +2,8 @@
 import React from 'react';
 import { Layout } from '../components/Layout';
 import { Shield, Bell, Camera, Mic, MapPin, Phone } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const Features = () => {
   return (
@@ -75,10 +77,19 @@ const Features = () => {
         
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold mb-4">Ready to feel safer?</h2>
-          <a href="/signup" className="btn-primary inline-flex items-center gap-2">
-            Sign Up Now
-            <Shield className="h-4 w-4" />
-          </a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button asChild size="lg">
+              <Link to="/signup">
+                Sign Up Now
+                <Shield className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild variant="secondary" size="lg">
+              <Link to="/demo">
+                Try Demo Mode
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </Layout>
