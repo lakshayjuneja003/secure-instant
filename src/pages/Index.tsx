@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Layout } from '../components/Layout';
 import { StatusIndicator } from '../components/StatusIndicator';
@@ -29,6 +30,7 @@ const Index = () => {
   const [photo, setPhoto] = useState<string | null>(null);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [events, setEvents] = useState<EmergencyEvent[]>([]);
+  const [triggerNewRecording, setTriggerNewRecording] = useState(false);
   
   // Refs
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -37,6 +39,7 @@ const Index = () => {
   const soundCheckRef = useRef<number | null>(null);
   const dataArrayRef = useRef<Uint8Array | null>(null);
   const lastEmergencyCheckRef = useRef<number>(0);
+  const lastHighSoundTriggerRef = useRef<number>(0);
   
   // Initialize audio and location monitoring
   useEffect(() => {
@@ -73,7 +76,8 @@ const Index = () => {
         setSoundLevel(level);
         
         const now = Date.now();
-        // To prevent multiple triggers in rapid succession, add a cooldown
+        
+        // Case 1: Not in emergency mode yet - activate emergency
         if (isSoundEmergency(level) && !isEmergencyActive && now - lastEmergencyCheckRef.current > 2000) {
           lastEmergencyCheckRef.current = now;
           toast({
@@ -82,6 +86,26 @@ const Index = () => {
             variant: "destructive",
           });
           activateEmergency('sound');
+        }
+        
+        // Case 2: Already in emergency mode - trigger new recording
+        if (isSoundEmergency(level) && isEmergencyActive && now - lastHighSoundTriggerRef.current > 5000) {
+          lastHighSoundTriggerRef.current = now;
+          
+          toast({
+            title: "High volume detected again",
+            description: "Starting a new audio recording",
+            variant: "destructive",
+          });
+          
+          // Trigger new recording
+          setTriggerNewRecording(prev => !prev); // Toggle to trigger effect
+          
+          // Add to timeline
+          setEvents(prev => [
+            createEmergencyEvent('audio', { trigger: 'sound_level' }),
+            ...prev
+          ]);
         }
         
         soundCheckRef.current = requestAnimationFrame(checkSound);
@@ -252,6 +276,7 @@ const Index = () => {
             <AudioRecorder 
               isEmergencyActive={isEmergencyActive}
               onRecordingComplete={handleAudioRecorded}
+              triggerNewRecording={triggerNewRecording}
             />
           </div>
           <div>

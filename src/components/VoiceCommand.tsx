@@ -21,7 +21,7 @@ export const VoiceCommand: React.FC<VoiceCommandProps> = ({
   useEffect(() => {
     if (!isEmergencyActive) {
       // Fix for SpeechRecognition browser compatibility
-      const SpeechRecognition = window.SpeechRecognition || 
+      const SpeechRecognition = (window as any).SpeechRecognition || 
                                (window as any).webkitSpeechRecognition || 
                                (window as any).mozSpeechRecognition || 
                                (window as any).msSpeechRecognition;

@@ -5,22 +5,28 @@ import { Mic, Square, PlayCircle, PauseCircle, Loader2 } from 'lucide-react';
 interface AudioRecorderProps {
   isEmergencyActive: boolean;
   onRecordingComplete: (audioUrl: string) => void;
+  triggerNewRecording?: boolean; // New prop to trigger re-recording
 }
 
 export const AudioRecorder: React.FC<AudioRecorderProps> = ({ 
   isEmergencyActive,
-  onRecordingComplete 
+  onRecordingComplete,
+  triggerNewRecording = false
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
+  const [recordingCount, setRecordingCount] = useState(0);
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<BlobPart[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timerRef = useRef<number | null>(null);
+
+  // Track previous trigger value to detect changes
+  const prevTriggerRef = useRef(triggerNewRecording);
 
   // Auto start recording when emergency is activated
   useEffect(() => {
@@ -28,6 +34,22 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
       startRecording();
     }
   }, [isEmergencyActive]);
+
+  // Handle re-recording when triggerNewRecording changes
+  useEffect(() => {
+    // If triggerNewRecording has changed to true and we're in emergency mode
+    if (triggerNewRecording && !prevTriggerRef.current && isEmergencyActive) {
+      // Only start a new recording if we're not already recording
+      if (!isRecording) {
+        setAudioURL(null); // Clear previous recording
+        startRecording();
+        setRecordingCount(prev => prev + 1);
+      }
+    }
+    
+    // Update the ref to current value
+    prevTriggerRef.current = triggerNewRecording;
+  }, [triggerNewRecording, isEmergencyActive]);
 
   // Handle timer for recording duration
   useEffect(() => {
@@ -131,7 +153,12 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
     <div className="card-glass">
       <div className="flex items-center gap-2 mb-4">
         <Mic className="h-5 w-5 text-primary" />
-        <h2 className="text-xl font-semibold">Audio Recording</h2>
+        <h2 className="text-xl font-semibold">
+          Audio Recording
+          {recordingCount > 1 && (
+            <span className="ml-2 text-sm text-muted-foreground">({recordingCount} recordings)</span>
+          )}
+        </h2>
       </div>
       
       {error ? (
@@ -219,6 +246,12 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
             <p className="text-xs text-muted-foreground">
               Recording will start automatically when emergency is activated. 
               You can also record manually by clicking the microphone button.
+            </p>
+          )}
+          
+          {isEmergencyActive && recordingCount > 1 && (
+            <p className="text-xs text-info">
+              Multiple recordings triggered due to high volume detection.
             </p>
           )}
         </div>
