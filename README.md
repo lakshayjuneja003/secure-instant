@@ -1,69 +1,35 @@
-# Welcome to your Lovable project
 
-## Project info
+# SafeGuard - Personal Emergency Response System
 
-**URL**: https://lovable.dev/projects/3f07630b-d785-4a75-84ad-2c450d5049be
+## Overview
+SafeGuard is a personal safety application designed to protect users in emergency situations through intelligent monitoring and automated response systems.
 
-## How can I edit this code?
+## Key Features
+- **Sound Detection**: Automatically detects screams or loud noises to trigger emergency protocols
+- **Voice Commands**: Activate emergency mode using voice recognition
+- **Automatic Evidence Collection**: Captures photos and audio recordings during emergencies
+- **Real-time Location Tracking**: Shares precise location with emergency contacts
+- **Emergency Timeline**: Creates detailed documentation of emergency events
+- **Emergency Contacts**: Automatically alerts designated contacts with your location and situation details
 
-There are several ways of editing your application.
+## Demo Mode
+Try SafeGuard's features in a simulated environment by clicking the "Demo" button. Experience the full functionality without affecting real emergency systems.
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/3f07630b-d785-4a75-84ad-2c450d5049be) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
+## Technologies Used
 - React
-- shadcn-ui
+- TypeScript
 - Tailwind CSS
+- shadcn/ui components
 
-## How can I deploy this project?
+## Getting Started
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Start the development server: `npm run dev`
+4. Access the application at http://localhost:5173
 
-Simply open [Lovable](https://lovable.dev/projects/3f07630b-d785-4a75-84ad-2c450d5049be) and click on Share -> Publish.
+## Deployment
+Built with Vite for optimized production builds. Deploy with `npm run build` to generate production-ready files.
 
-## I want to use a custom domain - is that possible?
+## License
+This project is protected under copyright law.
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
